@@ -11,6 +11,7 @@ Public Class Form1
     Dim white_line As Boolean = True    'ログ欄の最初の行が、例外防止の空行かどうか（Trueなら空行）
     Dim movfile, undobuffer As String
     Dim lastSearchWord As String
+    Dim dpiScale As Double
 
     Friend WithEvents MenuItem20 As System.Windows.Forms.MenuItem
     Friend WithEvents MenuItem21 As System.Windows.Forms.MenuItem
@@ -94,7 +95,6 @@ Public Class Form1
 
     '既存ファイル読み込み
     Sub LoadLog()
-
         With OpenFileDialog1
             .Title = "ログファイルを選択"
             .CheckFileExists = True
@@ -184,7 +184,6 @@ Public Class Form1
     Sub insert_memo_value(ByVal tcode As String, ByVal memo_text As String)
         'アンドゥバッファ保存
         SaveUndoBuffer()
-
         If IsPlaying() Then
             If tcode = "now" Then
                 tcode = sec_to_minsec(player_frm.Player1.Ctlcontrols.currentPosition() - My.Settings.offset)
@@ -328,6 +327,7 @@ Public Class Form1
         Me.MenuItem14 = New System.Windows.Forms.MenuItem()
         Me.MenuItem15 = New System.Windows.Forms.MenuItem()
         Me.MenuItem32 = New System.Windows.Forms.MenuItem()
+        Me.MenuItem33 = New System.Windows.Forms.MenuItem()
         Me.MenuItem30 = New System.Windows.Forms.MenuItem()
         Me.MenuItem31 = New System.Windows.Forms.MenuItem()
         Me.MenuItem24 = New System.Windows.Forms.MenuItem()
@@ -356,7 +356,6 @@ Public Class Form1
         Me.MenuItem17 = New System.Windows.Forms.MenuItem()
         Me.MenuItem29 = New System.Windows.Forms.MenuItem()
         Me.MenuItem28 = New System.Windows.Forms.MenuItem()
-        Me.MenuItem33 = New System.Windows.Forms.MenuItem()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -482,6 +481,13 @@ Public Class Form1
         Me.MenuItem32.Shortcut = System.Windows.Forms.Shortcut.CtrlF
         Me.MenuItem32.Text = "検索(次)...(&F)"
         '
+        'MenuItem33
+        '
+        Me.MenuItem33.Enabled = False
+        Me.MenuItem33.Index = 7
+        Me.MenuItem33.Shortcut = System.Windows.Forms.Shortcut.CtrlG
+        Me.MenuItem33.Text = "次を検索"
+        '
         'MenuItem30
         '
         Me.MenuItem30.Index = 8
@@ -540,17 +546,19 @@ Public Class Form1
         Me.Memo.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Memo.ImeMode = System.Windows.Forms.ImeMode.[On]
-        Me.Memo.Location = New System.Drawing.Point(248, 11)
+        Me.Memo.Location = New System.Drawing.Point(455, 19)
+        Me.Memo.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.Memo.Name = "Memo"
-        Me.Memo.Size = New System.Drawing.Size(280, 19)
+        Me.Memo.Size = New System.Drawing.Size(510, 28)
         Me.Memo.TabIndex = 0
         '
         'Done
         '
         Me.Done.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Done.Location = New System.Drawing.Point(536, 8)
+        Me.Done.Location = New System.Drawing.Point(983, 14)
+        Me.Done.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.Done.Name = "Done"
-        Me.Done.Size = New System.Drawing.Size(56, 24)
+        Me.Done.Size = New System.Drawing.Size(103, 42)
         Me.Done.TabIndex = 1
         Me.Done.Text = "記録"
         '
@@ -569,80 +577,90 @@ Public Class Form1
         Me.Panel1.Controls.Add(Me.Label1)
         Me.Panel1.Controls.Add(Me.Done)
         Me.Panel1.Controls.Add(Me.Bt_F1)
-        Me.Panel1.Location = New System.Drawing.Point(0, 528)
+        Me.Panel1.Location = New System.Drawing.Point(0, 924)
+        Me.Panel1.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(600, 64)
+        Me.Panel1.Size = New System.Drawing.Size(1100, 112)
         Me.Panel1.TabIndex = 1
         '
         'timecode
         '
-        Me.timecode.Location = New System.Drawing.Point(87, 11)
+        Me.timecode.Location = New System.Drawing.Point(160, 19)
+        Me.timecode.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.timecode.Name = "timecode"
-        Me.timecode.Size = New System.Drawing.Size(48, 19)
+        Me.timecode.Size = New System.Drawing.Size(85, 28)
         Me.timecode.TabIndex = 2
         Me.timecode.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(140, 9)
+        Me.Button1.Location = New System.Drawing.Point(257, 16)
+        Me.Button1.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(56, 23)
+        Me.Button1.Size = New System.Drawing.Size(103, 40)
         Me.Button1.TabIndex = 9
         Me.Button1.Text = "解除(&U)"
         '
         'Bt_F5
         '
-        Me.Bt_F5.Location = New System.Drawing.Point(472, 40)
+        Me.Bt_F5.Location = New System.Drawing.Point(865, 70)
+        Me.Bt_F5.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.Bt_F5.Name = "Bt_F5"
-        Me.Bt_F5.Size = New System.Drawing.Size(96, 23)
+        Me.Bt_F5.Size = New System.Drawing.Size(176, 40)
         Me.Bt_F5.TabIndex = 8
         Me.Bt_F5.Text = "F5: タスク完了"
         '
         'Bt_F4
         '
-        Me.Bt_F4.Location = New System.Drawing.Point(360, 40)
+        Me.Bt_F4.Location = New System.Drawing.Point(660, 70)
+        Me.Bt_F4.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.Bt_F4.Name = "Bt_F4"
-        Me.Bt_F4.Size = New System.Drawing.Size(96, 23)
+        Me.Bt_F4.Size = New System.Drawing.Size(176, 40)
         Me.Bt_F4.TabIndex = 7
         Me.Bt_F4.Text = "F4: 問題発生"
         '
         'Bt_F3
         '
-        Me.Bt_F3.Location = New System.Drawing.Point(248, 40)
+        Me.Bt_F3.Location = New System.Drawing.Point(455, 70)
+        Me.Bt_F3.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.Bt_F3.Name = "Bt_F3"
-        Me.Bt_F3.Size = New System.Drawing.Size(96, 23)
+        Me.Bt_F3.Size = New System.Drawing.Size(176, 40)
         Me.Bt_F3.TabIndex = 6
         Me.Bt_F3.Text = "F3: 教示者発話"
         '
         'Bt_F2
         '
-        Me.Bt_F2.Location = New System.Drawing.Point(136, 40)
+        Me.Bt_F2.Location = New System.Drawing.Point(249, 70)
+        Me.Bt_F2.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.Bt_F2.Name = "Bt_F2"
-        Me.Bt_F2.Size = New System.Drawing.Size(96, 23)
+        Me.Bt_F2.Size = New System.Drawing.Size(176, 40)
         Me.Bt_F2.TabIndex = 5
         Me.Bt_F2.Text = "F2: 被験者発話"
         '
         'Label4
         '
-        Me.Label4.Location = New System.Drawing.Point(203, 14)
+        Me.Label4.Location = New System.Drawing.Point(372, 24)
+        Me.Label4.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(41, 18)
+        Me.Label4.Size = New System.Drawing.Size(75, 32)
         Me.Label4.TabIndex = 2
         Me.Label4.Text = "メモ(&M):"
         '
         'Label1
         '
-        Me.Label1.Location = New System.Drawing.Point(8, 14)
+        Me.Label1.Location = New System.Drawing.Point(15, 24)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(84, 18)
+        Me.Label1.Size = New System.Drawing.Size(154, 32)
         Me.Label1.TabIndex = 0
         Me.Label1.Text = "タイムコード(&L):"
         '
         'Bt_F1
         '
-        Me.Bt_F1.Location = New System.Drawing.Point(24, 40)
+        Me.Bt_F1.Location = New System.Drawing.Point(44, 70)
+        Me.Bt_F1.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.Bt_F1.Name = "Bt_F1"
-        Me.Bt_F1.Size = New System.Drawing.Size(96, 23)
+        Me.Bt_F1.Size = New System.Drawing.Size(176, 40)
         Me.Bt_F1.TabIndex = 4
         Me.Bt_F1.Text = "F1: タスク開始"
         '
@@ -658,9 +676,10 @@ Public Class Form1
         Me.log_lb.ImeMode = System.Windows.Forms.ImeMode.NoControl
         Me.log_lb.ItemHeight = 12
         Me.log_lb.Location = New System.Drawing.Point(0, 0)
+        Me.log_lb.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.log_lb.Name = "log_lb"
         Me.log_lb.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.log_lb.Size = New System.Drawing.Size(600, 518)
+        Me.log_lb.Size = New System.Drawing.Size(1098, 902)
         Me.log_lb.Sorted = True
         Me.log_lb.TabIndex = 2
         '
@@ -688,25 +707,20 @@ Public Class Form1
         Me.MenuItem28.Index = 3
         Me.MenuItem28.Text = "ここの画面写真を撮る"
         '
-        'MenuItem33
-        '
-        Me.MenuItem33.Enabled = False
-        Me.MenuItem33.Index = 7
-        Me.MenuItem33.Shortcut = System.Windows.Forms.Shortcut.CtrlG
-        Me.MenuItem33.Text = "次を検索"
-        '
         'Form1
         '
         Me.AllowDrop = True
-        Me.AutoScaleBaseSize = New System.Drawing.Size(5, 12)
-        Me.ClientSize = New System.Drawing.Size(600, 601)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(11.0!, 21.0!)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.ClientSize = New System.Drawing.Size(1100, 1052)
         Me.Controls.Add(Me.log_lb)
         Me.Controls.Add(Me.Panel1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Location = New System.Drawing.Point(200, 100)
+        Me.Margin = New System.Windows.Forms.Padding(6, 5, 6, 5)
         Me.Menu = Me.MainMenu1
-        Me.MinimumSize = New System.Drawing.Size(608, 600)
+        Me.MinimumSize = New System.Drawing.Size(1095, 1002)
         Me.Name = "Form1"
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
@@ -748,7 +762,6 @@ Public Class Form1
             My.Settings.UpdateRequired = False
             My.Settings.Save()
         End If
-
 
         Me.Width = 600
         Me.Height = 500
@@ -878,14 +891,14 @@ Public Class Form1
         'ファイル名を取り出し、動画ウインドウのタイトルバーに表示
         player_frm.Text = GetFullPathToFileName(movfile)
         player_frm.Show()
-        If Me.Location.X - 640 > 0 Then
-            frm_rect.X = Me.Location.X - 640
+        If Me.Location.X - 640 * dpiScale > 0 Then
+            frm_rect.X = Me.Location.X - 640 * dpiScale
         Else
             frm_rect.X = 0
         End If
         frm_rect.Y = Me.Location.Y
-        frm_rect.Width = 640
-        frm_rect.Height = 550
+        frm_rect.Width = 640 * dpiScale
+        frm_rect.Height = 550 * dpiScale
         player_frm.DesktopBounds = frm_rect
 
         ' 動画操作パネルを開く
@@ -896,7 +909,7 @@ Public Class Form1
             control_frm = New Form3
         End If
         control_frm.Show()
-        frm_rect.X = player_frm.Location.X + player_frm.Width - 472
+        frm_rect.X = player_frm.Location.X
         frm_rect.Y = player_frm.Location.Y + player_frm.Height
         control_frm.DesktopBounds = frm_rect
         'switch_grab(get_filename_extension(movfile)) '撮影ボタンの切り替え
@@ -984,7 +997,8 @@ Public Class Form1
         'デリミタ位置に縦線を描画する。
         Dim mypen As Pen
         mypen = Pens.Gray
-        e.Graphics.DrawLine(mypen, 45, 0, 45, log_lb.Width)
+        Dim lineX As Int16 = Int(45 * dpiScale)
+        e.Graphics.DrawLine(mypen, lineX, 0, lineX, log_lb.Width)
 
         '選択行の背景色をかえる
         If (e.State And DrawItemState.Selected) = DrawItemState.Selected Then
@@ -1377,6 +1391,18 @@ Public Class Form1
         Else
             MsgBox("対象となる行が選択されていません。")
         End If
+    End Sub
+
+    '画面再描画で呼ばれる
+    Private Sub Form1_Paint(sender As Object, e As PaintEventArgs) Handles MyBase.Paint
+        'ディスプレイスケール値を更新
+        Dim g As Graphics = e.Graphics
+        Console.WriteLine(g.DpiX)
+        dpiScale = g.DpiX / 96.0F
+        If 12 * dpiScale < 256 Then
+            log_lb.ItemHeight = Int(12 * dpiScale) '12はデフォルトのItemHeight
+        End If
+
     End Sub
 
 

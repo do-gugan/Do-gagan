@@ -27,7 +27,6 @@ Module Common_functions
         '.NET 4.7 HiDPI対応
         Application.EnableVisualStyles()
         Application.SetCompatibleTextRenderingDefault(False)
-
         'メインパネルを開く
         main_frm = New Form1
         main_frm.ShowDialog() '表示後、フォームを閉じない
